@@ -7,6 +7,7 @@ const API_KEY = process.env.REACT_APP_WEATHER_API_KEY;
 const App = () => {
   const [zip, setZip] = useState("");
   const [weatherData, setWeatherData] = useState([]);
+  const [activeIndex, setActiveIndex] = useState(null);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -48,14 +49,24 @@ const App = () => {
     }
   };
 
-  const renderedResults = weatherData.map((city) => {
+  const handleDelete = (id) => {
+    setWeatherData(weatherData.filter((city) => city.id !== id));
+  };
+
+  const handleExpand = (idx) => {
+    setActiveIndex(idx);
+  };
+
+  const renderedResults = weatherData.map((city, idx) => {
+    const display = idx === activeIndex ? {} : { display: "none" };
+
     return (
-      <div key={city.id}>
+      <div key={city.id} onClick={() => handleExpand(idx)}>
         <div>
           {city.current.name}: {city.current.description},{" "}
           {city.current.temperature} degrees Fahrenheit
         </div>
-        <ul>
+        <ul style={display}>
           {city.forecast.map((day) => {
             return (
               <li key={day.id}>
@@ -64,6 +75,7 @@ const App = () => {
             );
           })}
         </ul>
+        <button onClick={() => handleDelete(city.id)}>Delete</button>
       </div>
     );
   });
