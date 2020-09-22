@@ -7,7 +7,7 @@ const API_KEY = process.env.REACT_APP_WEATHER_API_KEY;
 const App = () => {
   const [zip, setZip] = useState("");
   const [weatherData, setWeatherData] = useState([]);
-  const [activeIndex, setActiveIndex] = useState(null);
+  const [activeID, setActiveID] = useState(null);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -53,15 +53,15 @@ const App = () => {
     setWeatherData(weatherData.filter((city) => city.id !== id));
   };
 
-  const handleExpand = (idx) => {
-    setActiveIndex(idx);
+  const handleExpand = (id) => {
+    setActiveID(id);
   };
 
-  const renderedResults = weatherData.map((city, idx) => {
-    const display = idx === activeIndex ? {} : { display: "none" };
+  const renderedResults = weatherData.map((city) => {
+    const display = city.id === activeID ? {} : { display: "none" };
 
     return (
-      <div key={city.id} onClick={() => handleExpand(idx)}>
+      <div key={city.id} onClick={() => handleExpand(city.id)}>
         <div>
           {city.current.name}: {city.current.description},{" "}
           {city.current.temperature} degrees Fahrenheit
