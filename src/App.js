@@ -7,40 +7,34 @@ const API_KEY = process.env.REACT_APP_WEATHER_API_KEY;
 const App = () => {
   const [zip, setZip] = useState("");
   const [weatherData, setWeatherData] = useState([]);
-  const [activeID, setActiveID] = useState(null);
+  const [activeCity, setActiveCity] = useState(null);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const { latitude, longitude } = zipcodes.lookup(zip);
-      const currentData = await axios.get(
-        `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=imperial&appid=${API_KEY}`
+      const { latitude, longitude, city } = zipcodes.lookup(zip);
+
+      const { data } = await axios.get(
+        `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=minutely,hourly,alerts&units=imperial&appid=${API_KEY}`
       );
-      const { weather, name, main, sys } = currentData.data;
-      const cityData = {
-        description: weather[0].description,
-        name: name,
-        temperature: main.temp,
-        id: sys.id,
+
+      const currentWeather = {
+        description: data.current.weather[0].description,
+        temperature: data.current.temp,
       };
 
-      const forecastData = await axios.get(
-        `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=current,minutely,hourly,alerts&units=imperial&appid=${API_KEY}`
-      );
-      console.log(forecastData);
-      const threeDayForecast = forecastData.data.daily
-        .slice(1, 4)
-        .map((day, idx) => {
-          return {
-            high: day.temp.max,
-            low: day.temp.min,
-            description: day.weather[0].description,
-            id: idx,
-          };
-        });
+      const threeDayForecast = data.daily.slice(1, 4).map((day, idx) => {
+        return {
+          high: day.temp.max,
+          low: day.temp.min,
+          description: day.weather[0].description,
+          id: idx,
+        };
+      });
+
       const weatherObject = {
-        id: cityData.id,
-        current: cityData,
+        city,
+        current: currentWeather,
         forecast: threeDayForecast,
       };
       setWeatherData(weatherData.concat(weatherObject));
@@ -49,33 +43,33 @@ const App = () => {
     }
   };
 
-  const handleDelete = (id) => {
-    setWeatherData(weatherData.filter((city) => city.id !== id));
+  const handleDelete = (city) => {
+    setWeatherData(weatherData.filter((weather) => weather.city !== city));
   };
 
-  const handleExpand = (id) => {
-    setActiveID(id);
+  const handleExpand = (city) => {
+    setActiveCity(city);
   };
 
-  const renderedResults = weatherData.map((city) => {
-    const display = city.id === activeID ? {} : { display: "none" };
+  const renderedResults = weatherData.map((weather) => {
+    const display = weather.city === activeCity ? {} : { display: "none" };
 
     return (
-      <div key={city.id} onClick={() => handleExpand(city.id)}>
+      <div key={weather.city} onClick={() => handleExpand(weather.city)}>
         <div>
-          {city.current.name}: {city.current.description},{" "}
-          {city.current.temperature} degrees Fahrenheit
+          {weather.city}: {weather.current.description},{" "}
+          {weather.current.temperature} degrees Fahrenheit
         </div>
         <ul style={display}>
-          {city.forecast.map((day) => {
+          {weather.forecast.map((day) => {
             return (
               <li key={day.id}>
-                {day.description} High: {day.high}, Low: {day.low}
+                {day.description}, High: {day.high}, Low: {day.low}
               </li>
             );
           })}
         </ul>
-        <button onClick={() => handleDelete(city.id)}>Delete</button>
+        <button onClick={() => handleDelete(weather.city)}>Delete</button>
       </div>
     );
   });
