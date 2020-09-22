@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import axios from "axios";
 import zipcodes from "zipcodes";
 
@@ -6,8 +6,14 @@ const API_KEY = process.env.REACT_APP_WEATHER_API_KEY;
 
 const App = () => {
   const [zip, setZip] = useState("");
-  const [weatherData, setWeatherData] = useState([]);
+  const [weatherData, setWeatherData] = useState(
+    JSON.parse(localStorage.getItem("weatherData")) || []
+  );
   const [activeCity, setActiveCity] = useState(null);
+
+  useEffect(() => {
+    localStorage.setItem("weatherData", JSON.stringify(weatherData));
+  }, [weatherData]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
