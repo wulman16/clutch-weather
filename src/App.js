@@ -59,7 +59,7 @@ const App = () => {
         throw new Error("City already added!");
       setCities(cities.concat({ latitude, longitude, name: city }));
     } catch (error) {
-      console.log(error);
+      alert(error);
     }
   };
 

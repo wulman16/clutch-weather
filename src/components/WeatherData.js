@@ -56,7 +56,7 @@ const WeatherData = ({ weather, display, handleExpand, handleDelete }) => {
                 />
               </div>
               <div className="col-sm-7 text-center">
-                {day.description} | High: {day.high}°F | Low: {day.low}°F
+                {day.description} | high: {day.high}°F | low: {day.low}°F
               </div>
             </div>
           );
