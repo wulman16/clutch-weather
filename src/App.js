@@ -1,6 +1,7 @@
 import React, { useState, useEffect, Fragment } from "react";
 import axios from "axios";
 import zipcodes from "zipcodes";
+import moment from "moment";
 
 const API_KEY = process.env.REACT_APP_WEATHER_API_KEY;
 
@@ -81,10 +82,13 @@ const App = () => {
           {weather.current.temperature} degrees Fahrenheit
         </div>
         <ul style={display}>
-          {weather.forecast.map((day) => {
+          {weather.forecast.map((day, idx) => {
             return (
               <li key={day.id}>
-                {day.description}, High: {day.high}, Low: {day.low}
+                {moment()
+                  .add(idx + 1, "day")
+                  .format("dddd")}
+                : {day.description}, High: {day.high}, Low: {day.low}
               </li>
             );
           })}
