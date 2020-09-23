@@ -19,7 +19,7 @@ const WeatherData = ({ weather, display, handleExpand, handleDelete }) => {
               src={`http://openweathermap.org/img/wn/${weather.current.icon}@2x.png`}
               alt={weather.current.description}
             />
-            {weather.current.description}, {weather.current.temperature}°F
+            {weather.current.description} | {weather.current.temperature}°F
           </div>
           <div className="col-md-2">
             <button
@@ -35,20 +35,22 @@ const WeatherData = ({ weather, display, handleExpand, handleDelete }) => {
       <div className="card-body forecast" style={display}>
         {weather.forecast.map((day, idx) => {
           return (
-            <div className="row align-items-center" key={day.id}>
-              <div className="col-md-4">
+            <div className="row align-items-center mb-2" key={day.id}>
+              <div className="col-sm-3 text-center">
                 <h5>
                   {moment()
                     .add(idx + 1, "day")
                     .format("dddd")}
                 </h5>
               </div>
-              <div className="col-md-8">
+              <div className="col-sm-2 text-center">
                 <img
                   src={`http://openweathermap.org/img/wn/${day.icon}@2x.png`}
                   alt={day.description}
-                />{" "}
-                {day.description}, High: {day.high}, Low: {day.low}
+                />
+              </div>
+              <div className="col-sm-7 text-center">
+                {day.description} | High: {day.high}°F | Low: {day.low}°F
               </div>
             </div>
           );
