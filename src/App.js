@@ -6,51 +6,63 @@ const API_KEY = process.env.REACT_APP_WEATHER_API_KEY;
 
 const App = () => {
   const [zip, setZip] = useState("");
-  const [weatherData, setWeatherData] = useState(
-    JSON.parse(localStorage.getItem("weatherData")) || []
+  const [cities, setCities] = useState(
+    JSON.parse(localStorage.getItem("cities")) || []
   );
+  const [weatherData, setWeatherData] = useState([]);
   const [activeCity, setActiveCity] = useState(null);
 
   useEffect(() => {
-    localStorage.setItem("weatherData", JSON.stringify(weatherData));
-  }, [weatherData]);
+    localStorage.setItem("cities", JSON.stringify(cities));
+  }, [cities]);
+
+  useEffect(() => {
+    async function getData() {
+      const newWeatherData = [];
+      for (const city of cities) {
+        const { data } = await axios.get(
+          `https://api.openweathermap.org/data/2.5/onecall?lat=${city.latitude}&lon=${city.longitude}&exclude=minutely,hourly,alerts&units=imperial&appid=${API_KEY}`
+        );
+
+        const currentWeather = {
+          description: data.current.weather[0].description,
+          temperature: data.current.temp,
+        };
+
+        const threeDayForecast = data.daily.slice(1, 4).map((day, idx) => {
+          return {
+            high: day.temp.max,
+            low: day.temp.min,
+            description: day.weather[0].description,
+            id: idx,
+          };
+        });
+
+        const weatherObject = {
+          city: city.name,
+          current: currentWeather,
+          forecast: threeDayForecast,
+        };
+        newWeatherData.push(weatherObject);
+      }
+      setWeatherData(newWeatherData);
+    }
+    getData();
+  }, [cities]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
       const { latitude, longitude, city } = zipcodes.lookup(zip);
-
-      const { data } = await axios.get(
-        `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=minutely,hourly,alerts&units=imperial&appid=${API_KEY}`
-      );
-
-      const currentWeather = {
-        description: data.current.weather[0].description,
-        temperature: data.current.temp,
-      };
-
-      const threeDayForecast = data.daily.slice(1, 4).map((day, idx) => {
-        return {
-          high: day.temp.max,
-          low: day.temp.min,
-          description: day.weather[0].description,
-          id: idx,
-        };
-      });
-
-      const weatherObject = {
-        city,
-        current: currentWeather,
-        forecast: threeDayForecast,
-      };
-      setWeatherData(weatherData.concat(weatherObject));
+      setCities(cities.concat({ latitude, longitude, name: city }));
     } catch (error) {
       console.log("error", error);
     }
   };
 
-  const handleDelete = (city) => {
-    setWeatherData(weatherData.filter((weather) => weather.city !== city));
+  const handleDelete = (cityName) => {
+    setCities(cities.filter((city) => city.name !== cityName));
+    setWeatherData(weatherData.filter((weather) => weather.city !== cityName));
   };
 
   const handleExpand = (city) => {
