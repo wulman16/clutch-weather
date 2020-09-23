@@ -59,6 +59,7 @@ const App = () => {
     } catch (error) {
       console.log(error);
     }
+    setZip("");
   };
 
   const handleDelete = (cityName) => {
