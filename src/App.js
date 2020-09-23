@@ -14,9 +14,6 @@ const App = () => {
 
   useEffect(() => {
     localStorage.setItem("cities", JSON.stringify(cities));
-  }, [cities]);
-
-  useEffect(() => {
     async function getData() {
       const newWeatherData = [];
       for (const city of cities) {
@@ -53,10 +50,14 @@ const App = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const { latitude, longitude, city } = zipcodes.lookup(zip);
+      const cityData = zipcodes.lookup(zip);
+      if (!cityData) throw new Error("Invalid ZIP code!");
+      const { latitude, longitude, city } = cityData;
+      if (cities.some((cityObject) => cityObject.name === city))
+        throw new Error("City already added!");
       setCities(cities.concat({ latitude, longitude, name: city }));
     } catch (error) {
-      console.log("error", error);
+      console.log(error);
     }
   };
 
@@ -96,7 +97,7 @@ const App = () => {
     <Fragment>
       <h1>Weather App</h1>
       <form onSubmit={handleSubmit}>
-        <label>Enter Zip Code</label>
+        <label>Enter U.S. Zip Code</label>
         <input
           type="text"
           value={zip}
