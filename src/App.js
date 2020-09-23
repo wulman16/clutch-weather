@@ -72,7 +72,7 @@ const App = () => {
     <div className="container">
       <h1 className="text-center m-3">
         <a className="text-decoration-none" href="/">
-          Weather App
+          Clutch Weather
         </a>
       </h1>
       <Search handleSubmit={handleSubmit} />
