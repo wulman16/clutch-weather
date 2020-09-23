@@ -15,11 +15,21 @@ const App = () => {
 
   useEffect(() => {
     localStorage.setItem("cities", JSON.stringify(cities));
-    async function getData() {
+
+    (async function getData() {
       const newWeatherData = [];
       for (const city of cities) {
         const { data } = await axios.get(
-          `https://api.openweathermap.org/data/2.5/onecall?lat=${city.latitude}&lon=${city.longitude}&exclude=minutely,hourly,alerts&units=imperial&appid=${API_KEY}`
+          `https://api.openweathermap.org/data/2.5/onecall`,
+          {
+            params: {
+              lat: city.latitude,
+              lon: city.longitude,
+              exclude: "minutely,hourly,alerts",
+              units: "imperial",
+              appid: API_KEY,
+            },
+          }
         );
 
         const currentWeather = {
@@ -29,11 +39,12 @@ const App = () => {
         };
 
         const threeDayForecast = data.daily.slice(1, 4).map((day, idx) => {
+          const { temp, weather } = day;
           return {
-            high: day.temp.max,
-            low: day.temp.min,
-            description: day.weather[0].description,
-            icon: day.weather[0].icon,
+            high: temp.max,
+            low: temp.min,
+            description: weather[0].description,
+            icon: weather[0].icon,
             id: idx,
           };
         });
@@ -46,8 +57,7 @@ const App = () => {
         newWeatherData.push(weatherObject);
       }
       setWeatherData(newWeatherData);
-    }
-    getData();
+    })();
   }, [cities]);
 
   const handleSubmit = async (zip) => {
@@ -70,11 +80,7 @@ const App = () => {
 
   return (
     <div className="container">
-      <h1 className="text-center m-3">
-        <a className="text-decoration-none" href="/">
-          Clutch Weather
-        </a>
-      </h1>
+      <h1 className="text-center m-3">Clutch Weather</h1>
       <Search handleSubmit={handleSubmit} />
       <Results weatherData={weatherData} handleDelete={handleDelete} />
       <div className="text-center m-3">
