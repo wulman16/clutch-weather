@@ -24,7 +24,7 @@ const Search = ({ handleSubmit }) => {
           value={zip}
           onChange={(e) => setZip(e.target.value)}
         />
-        <input type="submit" className="btn btn-primary m-2" value="Submit" />
+        <input type="submit" className="btn btn-primary m-2" value="Add City" />
       </form>
     </div>
   );

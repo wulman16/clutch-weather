@@ -1,3 +1,4 @@
+import "./App.css";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import zipcodes from "zipcodes";
@@ -20,8 +21,6 @@ const App = () => {
         const { data } = await axios.get(
           `https://api.openweathermap.org/data/2.5/onecall?lat=${city.latitude}&lon=${city.longitude}&exclude=minutely,hourly,alerts&units=imperial&appid=${API_KEY}`
         );
-
-        console.log(data);
 
         const currentWeather = {
           description: data.current.weather[0].description,

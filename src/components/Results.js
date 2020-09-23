@@ -5,7 +5,7 @@ const Results = ({ weatherData, handleDelete }) => {
   const [activeCity, setActiveCity] = useState(null);
 
   const handleExpand = (city) => {
-    setActiveCity(city);
+    setActiveCity(city === activeCity ? null : city);
   };
 
   const renderedResults = weatherData.map((weather, idx) => {
