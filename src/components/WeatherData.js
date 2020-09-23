@@ -16,7 +16,7 @@ const WeatherData = ({ weather, display, handleExpand, handleDelete }) => {
           </div>
           <div className="col-md-6">
             <div className="row align-items-center m-2">
-              <div className="col-sm-5">
+              <div className="col-sm-5 bg-info">
                 <img
                   src={`http://openweathermap.org/img/wn/${weather.current.icon}@2x.png`}
                   alt={weather.current.description}
@@ -49,7 +49,7 @@ const WeatherData = ({ weather, display, handleExpand, handleDelete }) => {
                     .format("dddd")}
                 </h5>
               </div>
-              <div className="col-sm-2 text-center">
+              <div className="col-sm-2 text-center bg-info">
                 <img
                   src={`http://openweathermap.org/img/wn/${day.icon}@2x.png`}
                   alt={day.description}
