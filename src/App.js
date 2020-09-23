@@ -77,6 +77,16 @@ const App = () => {
       </h1>
       <Search handleSubmit={handleSubmit} />
       <Results weatherData={weatherData} handleDelete={handleDelete} />
+      <div className="text-center m-3">
+        Made with
+        <span role="img" aria-label="heart" className="ml-1 mr-2">
+          ❤️
+        </span>
+        by{" "}
+        <a className="text-decoration-none" href="https://github.com/wulman16">
+          Will Ulman
+        </a>
+      </div>
     </div>
   );
 };
