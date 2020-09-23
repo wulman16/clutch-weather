@@ -22,9 +22,12 @@ const App = () => {
           `https://api.openweathermap.org/data/2.5/onecall?lat=${city.latitude}&lon=${city.longitude}&exclude=minutely,hourly,alerts&units=imperial&appid=${API_KEY}`
         );
 
+        console.log(data);
+
         const currentWeather = {
           description: data.current.weather[0].description,
           temperature: data.current.temp,
+          icon: data.current.weather[0].icon,
         };
 
         const threeDayForecast = data.daily.slice(1, 4).map((day, idx) => {
@@ -32,6 +35,7 @@ const App = () => {
             high: day.temp.max,
             low: day.temp.min,
             description: day.weather[0].description,
+            icon: day.weather[0].icon,
             id: idx,
           };
         });
@@ -78,8 +82,12 @@ const App = () => {
     return (
       <div key={weather.city} onClick={() => handleExpand(weather.city)}>
         <div>
-          {weather.city}: {weather.current.description},{" "}
-          {weather.current.temperature} degrees Fahrenheit
+          {weather.city}:{" "}
+          <img
+            src={`http://openweathermap.org/img/wn/${weather.current.icon}@2x.png`}
+          />{" "}
+          {weather.current.description}, {weather.current.temperature} degrees
+          Fahrenheit
         </div>
         <ul style={display}>
           {weather.forecast.map((day, idx) => {
@@ -88,7 +96,11 @@ const App = () => {
                 {moment()
                   .add(idx + 1, "day")
                   .format("dddd")}
-                : {day.description}, High: {day.high}, Low: {day.low}
+                :{" "}
+                <img
+                  src={`http://openweathermap.org/img/wn/${day.icon}@2x.png`}
+                />{" "}
+                {day.description}, High: {day.high}, Low: {day.low}
               </li>
             );
           })}
