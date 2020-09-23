@@ -70,7 +70,7 @@ const App = () => {
 
   return (
     <div className="container">
-      <h1 className="text-center">
+      <h1 className="text-center m-3">
         <a className="text-decoration-none" href="/">
           Weather App
         </a>

@@ -3,7 +3,7 @@ import moment from "moment";
 
 const WeatherData = ({ weather, display, handleExpand, handleDelete }) => {
   return (
-    <div className="card m-2">
+    <div className="card m-3">
       <div
         className="btn card-header"
         type="button"
@@ -15,11 +15,17 @@ const WeatherData = ({ weather, display, handleExpand, handleDelete }) => {
             <h3>{weather.city}</h3>
           </div>
           <div className="col-md-6">
-            <img
-              src={`http://openweathermap.org/img/wn/${weather.current.icon}@2x.png`}
-              alt={weather.current.description}
-            />
-            {weather.current.description} | {weather.current.temperature}°F
+            <div className="row align-items-center m-2">
+              <div className="col-sm-5">
+                <img
+                  src={`http://openweathermap.org/img/wn/${weather.current.icon}@2x.png`}
+                  alt={weather.current.description}
+                />
+              </div>
+              <div className="col-sm-7">
+                {weather.current.description} | {weather.current.temperature}°F
+              </div>
+            </div>
           </div>
           <div className="col-md-2">
             <button
@@ -35,7 +41,7 @@ const WeatherData = ({ weather, display, handleExpand, handleDelete }) => {
       <div className="card-body forecast" style={display}>
         {weather.forecast.map((day, idx) => {
           return (
-            <div className="row align-items-center mb-2" key={day.id}>
+            <div className="row align-items-center mb-3" key={day.id}>
               <div className="col-sm-3 text-center">
                 <h5>
                   {moment()

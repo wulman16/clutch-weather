@@ -22,7 +22,7 @@ const Results = ({ weatherData, handleDelete }) => {
     );
   });
 
-  return <div>{renderedResults}</div>;
+  return <div className="m-3">{renderedResults}</div>;
 };
 
 export default Results;

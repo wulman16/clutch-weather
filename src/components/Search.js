@@ -11,20 +11,20 @@ const Search = ({ handleSubmit }) => {
   };
 
   return (
-    <div className="d-flex justify-content-center">
+    <div className="d-flex justify-content-center m-2">
       <form onSubmit={onFormSubmit} className="form-inline">
-        <label htmlFor="zipCodeInput" className="m-2">
+        <label htmlFor="zipCodeInput" className="m-1">
           U.S. Zip Code:
         </label>
         <input
           type="text"
-          className="form-control m-2 mw-25"
+          className="form-control m-1 mw-25"
           id="zipCodeInput"
           placeholder="30305"
           value={zip}
           onChange={(e) => setZip(e.target.value)}
         />
-        <input type="submit" className="btn btn-primary m-2" value="Add City" />
+        <input type="submit" className="btn btn-primary m-1" value="Add City" />
       </form>
     </div>
   );
