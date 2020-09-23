@@ -1,17 +1,16 @@
 import React, { useState, useEffect, Fragment } from "react";
 import axios from "axios";
 import zipcodes from "zipcodes";
-import moment from "moment";
+import Search from "./components/Search";
+import Results from "./components/Results";
 
 const API_KEY = process.env.REACT_APP_WEATHER_API_KEY;
 
 const App = () => {
-  const [zip, setZip] = useState("");
   const [cities, setCities] = useState(
     JSON.parse(localStorage.getItem("cities")) || []
   );
   const [weatherData, setWeatherData] = useState([]);
-  const [activeCity, setActiveCity] = useState(null);
 
   useEffect(() => {
     localStorage.setItem("cities", JSON.stringify(cities));
@@ -52,8 +51,7 @@ const App = () => {
     getData();
   }, [cities]);
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const handleSubmit = async (zip) => {
     try {
       const cityData = zipcodes.lookup(zip);
       if (!cityData) throw new Error("Invalid ZIP code!");
@@ -64,7 +62,6 @@ const App = () => {
     } catch (error) {
       console.log(error);
     }
-    setZip("");
   };
 
   const handleDelete = (cityName) => {
@@ -72,57 +69,11 @@ const App = () => {
     setWeatherData(weatherData.filter((weather) => weather.city !== cityName));
   };
 
-  const handleExpand = (city) => {
-    setActiveCity(city);
-  };
-
-  const renderedResults = weatherData.map((weather) => {
-    const display = weather.city === activeCity ? {} : { display: "none" };
-
-    return (
-      <div key={weather.city} onClick={() => handleExpand(weather.city)}>
-        <div>
-          {weather.city}:{" "}
-          <img
-            src={`http://openweathermap.org/img/wn/${weather.current.icon}@2x.png`}
-          />{" "}
-          {weather.current.description}, {weather.current.temperature} degrees
-          Fahrenheit
-        </div>
-        <ul style={display}>
-          {weather.forecast.map((day, idx) => {
-            return (
-              <li key={day.id}>
-                {moment()
-                  .add(idx + 1, "day")
-                  .format("dddd")}
-                :{" "}
-                <img
-                  src={`http://openweathermap.org/img/wn/${day.icon}@2x.png`}
-                />{" "}
-                {day.description}, High: {day.high}, Low: {day.low}
-              </li>
-            );
-          })}
-        </ul>
-        <button onClick={() => handleDelete(weather.city)}>Delete</button>
-      </div>
-    );
-  });
-
   return (
     <Fragment>
       <h1>Weather App</h1>
-      <form onSubmit={handleSubmit}>
-        <label>Enter U.S. Zip Code</label>
-        <input
-          type="text"
-          value={zip}
-          onChange={(e) => setZip(e.target.value)}
-        />
-        <input type="submit" value="Submit" />
-      </form>
-      <div>{renderedResults}</div>
+      <Search handleSubmit={handleSubmit} />
+      <Results weatherData={weatherData} handleDelete={handleDelete} />
     </Fragment>
   );
 };
