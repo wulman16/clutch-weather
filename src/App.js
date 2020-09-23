@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import zipcodes from "zipcodes";
 import Search from "./components/Search";
@@ -70,11 +70,15 @@ const App = () => {
   };
 
   return (
-    <Fragment>
-      <h1>Weather App</h1>
+    <div className="container">
+      <h1 className="text-center">
+        <a className="text-decoration-none" href="/">
+          Weather App
+        </a>
+      </h1>
       <Search handleSubmit={handleSubmit} />
       <Results weatherData={weatherData} handleDelete={handleDelete} />
-    </Fragment>
+    </div>
   );
 };
 

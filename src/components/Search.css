@@ -1,0 +1,5 @@
+@media (max-width: 576px) {
+  #zipCodeInput {
+    width: 30%;
+  }
+}
